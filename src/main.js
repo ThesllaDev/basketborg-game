@@ -1,11 +1,12 @@
 import Phaser from "phaser";
 import MenuScene from "./scenes/MenuScene";
 import TrainingScene from "./scenes/TrainingScene";
+import GameScene from "./scenes/GameScene";
 
 const config = {
   type: Phaser.AUTO,
   backgroundColor: "#000000",
-  scene: [MenuScene, TrainingScene],
+  scene: [MenuScene, TrainingScene, GameScene],
   parent: "game",
   physics: {
     default: "arcade",

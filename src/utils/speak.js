@@ -1,6 +1,12 @@
-export function speak(text) {
+export function speak(text, onEnd) {
   window.speechSynthesis.cancel();
+
   const utterance = new SpeechSynthesisUtterance(text);
+
+  if (onEnd) {
+    utterance.onend = onEnd;
+  }
+
   window.speechSynthesis.speak(utterance);
 }
 
