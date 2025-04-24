@@ -102,7 +102,7 @@ export default class MenuScene extends Phaser.Scene {
   executeOption(option) {
     switch (option) {
       case "Play":
-        this.scene.start("GameScene");
+        this.scene.start("TrainingScene");
         break;
       case "Voice: On":
       case "Voice: Off":
