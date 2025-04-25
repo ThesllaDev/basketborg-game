@@ -21,7 +21,7 @@ export const TEXT_CONTENT = {
     ],
   },
   game: {
-		title: "Game Situation",
+    title: "Game Situation",
     situation:
       "There are only a few seconds left in the game and you already have possession of the ball, make your choice:",
     options: [
@@ -30,5 +30,12 @@ export const TEXT_CONTENT = {
       { key: "shooting", label: "Long-range shot" },
       { key: "dribbling", label: "Dribble and layup" },
     ],
+  },
+  result: {
+    title: "Game Result",
+    success: (decision) => `Nice! Your decision "${decision}" worked.`,
+    failure: (decision) =>
+      `Oops! Your decision "${decision}" didn't go as calculated.`,
+    button: "Back to Menu",
   },
 };

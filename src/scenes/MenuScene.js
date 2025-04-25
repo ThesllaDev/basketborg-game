@@ -8,6 +8,10 @@ export default class MenuScene extends Phaser.Scene {
     super({ key: "MenuScene" });
   }
 
+  preload() {
+    this.load.audio("whistle", "/sounds/whistle.wav");
+  }
+
   create() {
     const { width, height } = this.scale;
 
