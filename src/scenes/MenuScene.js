@@ -87,12 +87,10 @@ export default class MenuScene extends Phaser.Scene {
       if (settings.voiceEnabled) speak(this.menuOptions[this.selectedIndex]);
     });
 
-    this.input.keyboard.on("keydown-ENTER", () => {
-      this.executeOption(this.menuOptions[this.selectedIndex]);
-    });
-
-    this.input.keyboard.on("keydown-SPACE", () => {
-      this.executeOption(this.menuOptions[this.selectedIndex]);
+    ["ENTER", "SPACE"].forEach((key) => {
+      this.input.keyboard.on(`keydown-${key}`, () => {
+        this.executeOption(this.menuOptions[this.selectedIndex]);
+      });
     });
   }
 
