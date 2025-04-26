@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { speak, speakSequence } from "../utils/speak";
 import { TEXT_CONTENT } from "../utils/textContent";
 import { settings } from "../utils/settings";
+import { transitionScene } from "../utils/sceneTransitions";
 
 export default class TrainingScene extends Phaser.Scene {
   constructor() {
@@ -14,6 +15,8 @@ export default class TrainingScene extends Phaser.Scene {
   }
 
   create() {
+    this.cameras.main.fadeIn(500, 0, 0, 0);
+
     const { width } = this.scale;
 
     this.add
@@ -123,7 +126,7 @@ export default class TrainingScene extends Phaser.Scene {
   handleOption(key) {
     if (key === "startGame") {
       if (settings.voiceEnabled) speak("Going to the game");
-      this.scene.start("GameScene", { stats: this.stats });
+      transitionScene(this, "GameScene", { stats: this.stats });
     } else {
       this.train(key);
     }

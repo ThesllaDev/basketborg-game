@@ -3,6 +3,7 @@ import { speak, speakSequence } from "../utils/speak";
 import { TEXT_CONTENT } from "../utils/textContent";
 import { settings } from "../utils/settings";
 import { gaussianRandom, estimateChanceOfSuccess } from "../utils/probability";
+import { transitionScene } from "../utils/sceneTransitions";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -19,6 +20,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.cameras.main.fadeIn(500, 0, 0, 0);
+
     const { width } = this.scale;
 
     const situationText = TEXT_CONTENT.game.situation;
@@ -124,13 +127,13 @@ export default class GameScene extends Phaser.Scene {
 
     if (settings.voiceEnabled) {
       speak(`You chose: ${decisionLabel}`, () => {
-        this.scene.start("ResultScene", {
+        transitionScene(this, "ResultScene", {
           success,
           decision: decisionLabel,
         });
       });
     } else {
-      this.scene.start("ResultScene", {
+      transitionScene(this, "ResultScene", {
         success,
         decision: decisionLabel,
       });

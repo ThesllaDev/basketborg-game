@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { speak, speakSequence } from "../utils/speak";
 import { TEXT_CONTENT } from "../utils/textContent";
 import { settings } from "../utils/settings";
+import { transitionScene } from "../utils/sceneTransitions";
 
 export default class MenuScene extends Phaser.Scene {
   constructor() {
@@ -13,6 +14,8 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   create() {
+    this.cameras.main.fadeIn(500, 0, 0, 0);
+
     const { width, height } = this.scale;
 
     this.menuOptions = TEXT_CONTENT.menu.options;
@@ -106,7 +109,7 @@ export default class MenuScene extends Phaser.Scene {
   executeOption(option) {
     switch (option) {
       case "Play":
-        this.scene.start("TrainingScene");
+        transitionScene(this, "TrainingScene");
         break;
       case "Voice: On":
       case "Voice: Off":

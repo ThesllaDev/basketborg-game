@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import { speak, speakSequence } from "../utils/speak";
 import { settings } from "../utils/settings";
 import { TEXT_CONTENT } from "../utils/textContent";
+import { transitionScene } from "../utils/sceneTransitions";
 
 export default class ResultScene extends Phaser.Scene {
   constructor() {
@@ -9,6 +10,8 @@ export default class ResultScene extends Phaser.Scene {
   }
 
   create(data) {
+    this.cameras.main.fadeIn(500, 0, 0, 0);
+
     const { width, height } = this.scale;
     const { success, decision } = data;
 
@@ -20,8 +23,9 @@ export default class ResultScene extends Phaser.Scene {
 
     this.add
       .text(width / 2, 60, titleTextContent, {
-        fontSize: "40px",
-        color: "#FFFFFF",
+        fontSize: "60px",
+        color: "#eb6339",
+        fontStyle: "bold",
       })
       .setOrigin(0.5);
 
@@ -43,7 +47,27 @@ export default class ResultScene extends Phaser.Scene {
       })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
-      .on("pointerdown", () => this.scene.start("MenuScene"));
+      .on("pointerover", () => {
+        button.setStyle({ backgroundColor: "#eb6339" });
+        this.tweens.add({
+          targets: button,
+          scale: 1.05,
+          duration: 150,
+          ease: "Power2",
+        });
+      })
+      .on("pointerout", () => {
+        button.setStyle({ backgroundColor: "#ffffff" });
+        this.tweens.add({
+          targets: button,
+          scale: 1,
+          duration: 150,
+          ease: "Power2",
+        });
+      })
+      .on("pointerdown", () => {
+        transitionScene(this, "MenuScene");
+      });
 
     this.input.keyboard.on("keydown", (event) => {
       if (event.code === "Enter" || event.code === "Space") {
