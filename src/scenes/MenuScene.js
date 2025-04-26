@@ -54,7 +54,7 @@ export default class MenuScene extends Phaser.Scene {
           fontSize: "48px",
         })
         .setOrigin(0.5)
-        .setInteractive({ useHandCursor: true })
+        .setInteractive({ useHandCursor: true, ariaLabel: option })
         .on("pointerdown", () => {
           this.executeOption(option);
         })

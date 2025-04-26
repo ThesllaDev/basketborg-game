@@ -57,7 +57,7 @@ export default class TrainingScene extends Phaser.Scene {
           fontSize: "36px",
         })
         .setOrigin(0.5)
-        .setInteractive({ useHandCursor: true })
+        .setInteractive({ useHandCursor: true, ariaLabel: option })
         .on("pointerdown", () => {
           this.handleOption(option.key);
         })

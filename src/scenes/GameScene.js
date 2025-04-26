@@ -52,7 +52,7 @@ export default class GameScene extends Phaser.Scene {
           wordWrap: { width: width - 80 },
         })
         .setOrigin(0.5)
-        .setInteractive({ useHandCursor: true })
+        .setInteractive({ useHandCursor: true, ariaLabel: option })
         .on("pointerdown", () => {
           this.evaluateDecision(option.key, option.label);
         })

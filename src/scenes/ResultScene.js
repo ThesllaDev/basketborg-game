@@ -41,7 +41,7 @@ export default class ResultScene extends Phaser.Scene {
         padding: { x: 20, y: 10 },
       })
       .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true })
+      .setInteractive({ useHandCursor: true, ariaLabel: option })
       .on("pointerover", () => {
         updateSelection([button], 0, {}, this);
         if (settings.voiceEnabled) speak(buttonTextContent);
