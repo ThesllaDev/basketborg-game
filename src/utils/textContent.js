@@ -3,7 +3,15 @@ export const TEXT_CONTENT = {
     title: "Welcome to Basketborg Game",
     instruction:
       "Use the arrow keys to navigate and press enter or space to select.",
-    options: ["Play", "Voice: On"],
+    options: ["Play", "Voice: On", "About"],
+  },
+  about: {
+    title: "About the Game",
+    description: `Basketborg is a fast-paced decision-making game where you control a human equipped with a robotic exoskeleton designed to analyze situations and enhance your basketball skills.
+In each play, you must choose to pass, shoot, or dribble, using the exoskeleton's analysis based on your skill stats combined with a touch of randomness.
+
+The theme of "robot and balance" is explored through the exoskeleton: it provides advantages in attributes, but success still depends on smart decisions and adapting to unexpected situations — just like the balance between technology and human skill in the real world.`,
+    button: "Back to Menu",
   },
   training: {
     title: "Training Session",

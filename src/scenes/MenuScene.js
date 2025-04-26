@@ -92,6 +92,9 @@ export default class MenuScene extends Phaser.Scene {
         this.optionTexts[1].setText(this.menuOptions[1]);
         if (settings.voiceEnabled) speak(this.menuOptions[1]);
         break;
+      case "About":
+        transitionScene(this, "AboutScene");
+        break;
     }
   }
 }
