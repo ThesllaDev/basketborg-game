@@ -85,5 +85,26 @@ export default class ResultScene extends Phaser.Scene {
     } else {
       this.sound.play("whistle");
     }
+
+    if (success) {
+      this.showConfetti();
+    }
+  }
+
+  showConfetti() {
+    const emitter = this.add.particles(0, 0, "confetti", {
+      x: { min: 0, max: this.scale.width },
+      y: 0,
+      speedY: { min: 200, max: 500 },
+      speedX: { min: -100, max: 100 },
+      lifespan: 3000,
+      scale: { start: 0.6, end: 0 },
+      rotate: { min: -180, max: 180 },
+      angle: { min: 260, max: 280 },
+      quantity: 12,
+      blendMode: "ADD",
+    });
+
+    this.time.delayedCall(3500, () => emitter.stop());
   }
 }
