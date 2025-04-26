@@ -4,6 +4,8 @@ import { TEXT_CONTENT } from "../utils/textContent";
 import { settings } from "../utils/settings";
 import { transitionScene } from "../utils/sceneTransitions";
 import { getTextStyles } from "../utils/textStyles";
+import { setupKeyboardNavigation } from "../utils/keyboardNavigation";
+import { updateSelection } from "../utils/textSelection";
 
 export default class TrainingScene extends Phaser.Scene {
   constructor() {
@@ -61,14 +63,12 @@ export default class TrainingScene extends Phaser.Scene {
         })
         .on("pointerover", () => {
           this.selectedIndex = index;
-          this.updateSelection();
+          updateSelection(this.optionTexts, this.selectedIndex);
           if (settings.voiceEnabled) speak(option.label);
         });
 
       this.optionTexts.push(text);
     });
-
-    this.updateSelection();
 
     if (settings.voiceEnabled) {
       speakSequence([
@@ -79,30 +79,14 @@ export default class TrainingScene extends Phaser.Scene {
       ]);
     }
 
-    this.input.keyboard.on("keydown-UP", () => {
-      this.selectedIndex = Phaser.Math.Wrap(
-        this.selectedIndex - 1,
-        0,
-        this.options.length
-      );
-      this.updateSelection();
-      if (settings.voiceEnabled) speak(this.options[this.selectedIndex].label);
-    });
-
-    this.input.keyboard.on("keydown-DOWN", () => {
-      this.selectedIndex = Phaser.Math.Wrap(
-        this.selectedIndex + 1,
-        0,
-        this.options.length
-      );
-      this.updateSelection();
-      if (settings.voiceEnabled) speak(this.options[this.selectedIndex].label);
-    });
-
-    ["ENTER", "SPACE"].forEach((key) => {
-      this.input.keyboard.on(`keydown-${key}`, () => {
-        this.handleOption(this.options[this.selectedIndex].key);
-      });
+    setupKeyboardNavigation(this, this.options, {
+      onNavigate: (selectedIndex) => {
+        updateSelection(this.optionTexts, selectedIndex);
+        if (settings.voiceEnabled) speak(this.options[selectedIndex].label);
+      },
+      onSelect: (selectedIndex) => {
+        this.handleOption(this.options[selectedIndex].key);
+      },
     });
   }
 
@@ -130,15 +114,5 @@ export default class TrainingScene extends Phaser.Scene {
     } else {
       this.train(key);
     }
-  }
-
-  updateSelection() {
-    this.optionTexts.forEach((text, index) => {
-      if (index === this.selectedIndex) {
-        text.setStyle({ color: "#eb6339", fontStyle: "bold" });
-      } else {
-        text.setStyle({ color: "#FFFFFF", fontStyle: "normal" });
-      }
-    });
   }
 }

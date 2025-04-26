@@ -5,6 +5,8 @@ import { settings } from "../utils/settings";
 import { gaussianRandom, estimateChanceOfSuccess } from "../utils/probability";
 import { transitionScene } from "../utils/sceneTransitions";
 import { getTextStyles } from "../utils/textStyles";
+import { setupKeyboardNavigation } from "../utils/keyboardNavigation";
+import { updateSelection } from "../utils/textSelection";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -56,14 +58,12 @@ export default class GameScene extends Phaser.Scene {
         })
         .on("pointerover", () => {
           this.selectedIndex = index;
-          this.updateSelection();
+          updateSelection(this.optionTexts, this.selectedIndex);
           if (settings.voiceEnabled) speak(option.label);
         });
 
       this.optionTexts.push(text);
     });
-
-    this.updateSelection();
 
     if (settings.voiceEnabled) {
       const fullSpeech = [
@@ -76,41 +76,15 @@ export default class GameScene extends Phaser.Scene {
       speakSequence(fullSpeech);
     }
 
-    this.input.keyboard.on("keydown-UP", () => {
-      this.selectedIndex = Phaser.Math.Wrap(
-        this.selectedIndex - 1,
-        0,
-        this.options.length
-      );
-      this.updateSelection();
-      if (settings.voiceEnabled) speak(this.options[this.selectedIndex].label);
-    });
-
-    this.input.keyboard.on("keydown-DOWN", () => {
-      this.selectedIndex = Phaser.Math.Wrap(
-        this.selectedIndex + 1,
-        0,
-        this.options.length
-      );
-      this.updateSelection();
-      if (settings.voiceEnabled) speak(this.options[this.selectedIndex].label);
-    });
-
-    ["ENTER", "SPACE"].forEach((key) => {
-      this.input.keyboard.on(`keydown-${key}`, () => {
-        const selected = this.options[this.selectedIndex];
+    setupKeyboardNavigation(this, this.options, {
+      onNavigate: (selectedIndex) => {
+        updateSelection(this.optionTexts, selectedIndex);
+        if (settings.voiceEnabled) speak(this.options[selectedIndex].label);
+      },
+      onSelect: (selectedIndex) => {
+        const selected = this.options[selectedIndex];
         this.evaluateDecision(selected.key, selected.label);
-      });
-    });
-  }
-
-  updateSelection() {
-    this.optionTexts.forEach((text, index) => {
-      if (index === this.selectedIndex) {
-        text.setStyle({ color: "#eb6339", fontStyle: "bold" });
-      } else {
-        text.setStyle({ color: "#FFFFFF", fontStyle: "normal" });
-      }
+      },
     });
   }
 

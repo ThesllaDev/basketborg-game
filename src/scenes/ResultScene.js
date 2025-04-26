@@ -4,6 +4,8 @@ import { settings } from "../utils/settings";
 import { TEXT_CONTENT } from "../utils/textContent";
 import { transitionScene } from "../utils/sceneTransitions";
 import { getTextStyles } from "../utils/textStyles";
+import { setupKeyboardNavigation } from "../utils/keyboardNavigation";
+import { updateSelection } from "../utils/textSelection";
 
 export default class ResultScene extends Phaser.Scene {
   constructor() {
@@ -62,10 +64,16 @@ export default class ResultScene extends Phaser.Scene {
         transitionScene(this, "MenuScene");
       });
 
-    this.input.keyboard.on("keydown", (event) => {
-      if (event.code === "Enter" || event.code === "Space") {
-        this.scene.start("MenuScene");
-      }
+    this.selectedIndex = 0;
+
+    setupKeyboardNavigation(this, [buttonTextContent], {
+      onNavigate: () => {
+        updateSelection([button], 0);
+        if (settings.voiceEnabled) speak(buttonTextContent);
+      },
+      onSelect: () => {
+        transitionScene(this, "MenuScene");
+      },
     });
 
     if (settings.voiceEnabled) {

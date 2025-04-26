@@ -4,6 +4,8 @@ import { TEXT_CONTENT } from "../utils/textContent";
 import { settings } from "../utils/settings";
 import { transitionScene } from "../utils/sceneTransitions";
 import { getTextStyles } from "../utils/textStyles";
+import { setupKeyboardNavigation } from "../utils/keyboardNavigation";
+import { updateSelection } from "../utils/textSelection";
 
 export default class MenuScene extends Phaser.Scene {
   constructor() {
@@ -58,49 +60,21 @@ export default class MenuScene extends Phaser.Scene {
         })
         .on("pointerover", () => {
           this.selectedIndex = index;
-          this.updateSelection();
+          updateSelection(this.optionTexts, this.selectedIndex);
           if (settings.voiceEnabled) speak(option);
         });
 
       this.optionTexts.push(text);
     });
 
-    this.updateSelection();
-
-    this.input.keyboard.on("keydown-UP", () => {
-      this.selectedIndex = Phaser.Math.Wrap(
-        this.selectedIndex - 1,
-        0,
-        this.menuOptions.length
-      );
-      this.updateSelection();
-      if (settings.voiceEnabled) speak(this.menuOptions[this.selectedIndex]);
-    });
-
-    this.input.keyboard.on("keydown-DOWN", () => {
-      this.selectedIndex = Phaser.Math.Wrap(
-        this.selectedIndex + 1,
-        0,
-        this.menuOptions.length
-      );
-      this.updateSelection();
-      if (settings.voiceEnabled) speak(this.menuOptions[this.selectedIndex]);
-    });
-
-    ["ENTER", "SPACE"].forEach((key) => {
-      this.input.keyboard.on(`keydown-${key}`, () => {
-        this.executeOption(this.menuOptions[this.selectedIndex]);
-      });
-    });
-  }
-
-  updateSelection() {
-    this.optionTexts.forEach((text, index) => {
-      if (index === this.selectedIndex) {
-        text.setStyle({ color: "#eb6339", fontStyle: "bold" });
-      } else {
-        text.setStyle({ color: "#FFFFFF", fontStyle: "normal" });
-      }
+    setupKeyboardNavigation(this, this.menuOptions, {
+      onNavigate: (selectedIndex) => {
+        updateSelection(this.optionTexts, selectedIndex);
+        if (settings.voiceEnabled) speak(this.menuOptions[selectedIndex]);
+      },
+      onSelect: (selectedIndex) => {
+        this.executeOption(this.menuOptions[selectedIndex]);
+      },
     });
   }
 
