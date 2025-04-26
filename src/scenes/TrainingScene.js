@@ -63,7 +63,7 @@ export default class TrainingScene extends Phaser.Scene {
         })
         .on("pointerover", () => {
           this.selectedIndex = index;
-          updateSelection(this.optionTexts, this.selectedIndex);
+          updateSelection(this.optionTexts, this.selectedIndex, {}, this);
           if (settings.voiceEnabled) speak(option.label);
         });
 
@@ -81,7 +81,7 @@ export default class TrainingScene extends Phaser.Scene {
 
     setupKeyboardNavigation(this, this.options, {
       onNavigate: (selectedIndex) => {
-        updateSelection(this.optionTexts, selectedIndex);
+        updateSelection(this.optionTexts, selectedIndex, {}, this);
         if (settings.voiceEnabled) speak(this.options[selectedIndex].label);
       },
       onSelect: (selectedIndex) => {

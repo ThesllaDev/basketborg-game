@@ -43,13 +43,8 @@ export default class ResultScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true })
       .on("pointerover", () => {
-        button.setStyle({ backgroundColor: "#eb6339" });
-        this.tweens.add({
-          targets: button,
-          scale: 1.05,
-          duration: 150,
-          ease: "Power2",
-        });
+        updateSelection([button], 0, {}, this);
+        if (settings.voiceEnabled) speak(buttonTextContent);
       })
       .on("pointerout", () => {
         button.setStyle({ backgroundColor: "#ffffff" });
@@ -66,9 +61,9 @@ export default class ResultScene extends Phaser.Scene {
 
     this.selectedIndex = 0;
 
-    setupKeyboardNavigation(this, [buttonTextContent], {
+    setupKeyboardNavigation(this, [button], {
       onNavigate: () => {
-        updateSelection([button], 0);
+        updateSelection([button], 0, {}, this);
         if (settings.voiceEnabled) speak(buttonTextContent);
       },
       onSelect: () => {
