@@ -3,6 +3,7 @@ import { speak, speakSequence } from "../utils/speak";
 import { TEXT_CONTENT } from "../utils/textContent";
 import { settings } from "../utils/settings";
 import { transitionScene } from "../utils/sceneTransitions";
+import { getTextStyles } from "../utils/textStyles";
 
 export default class MenuScene extends Phaser.Scene {
   constructor() {
@@ -18,24 +19,23 @@ export default class MenuScene extends Phaser.Scene {
 
     const { width, height } = this.scale;
 
+    const TEXT_STYLES = getTextStyles(width);
+
     this.menuOptions = TEXT_CONTENT.menu.options;
     this.optionTexts = [];
     this.selectedIndex = 0;
 
     const title = this.add
-      .text(width / 2, 100, TEXT_CONTENT.menu.title, {
-        fontSize: "60px",
-        fontStyle: "bold",
-        color: "#eb6339",
-      })
+      .text(width / 2, 60, TEXT_CONTENT.menu.title, TEXT_STYLES.title)
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, 160, TEXT_CONTENT.menu.instruction, {
-        fontSize: "24px",
-        fontStyle: "bold",
-        color: "#AAAAAA",
-      })
+      .text(
+        width / 2,
+        160,
+        TEXT_CONTENT.menu.instruction,
+        TEXT_STYLES.instruction
+      )
       .setOrigin(0.5);
 
     if (settings.voiceEnabled) {
@@ -48,7 +48,7 @@ export default class MenuScene extends Phaser.Scene {
 
     this.menuOptions.forEach((option, index) => {
       const text = this.add
-        .text(width / 2, 240 + index * 60, option, {
+        .text(width / 2, height / 2 + index * 60, option, {
           fontSize: "48px",
         })
         .setOrigin(0.5)

@@ -3,6 +3,7 @@ import { speak, speakSequence } from "../utils/speak";
 import { TEXT_CONTENT } from "../utils/textContent";
 import { settings } from "../utils/settings";
 import { transitionScene } from "../utils/sceneTransitions";
+import { getTextStyles } from "../utils/textStyles";
 
 export default class TrainingScene extends Phaser.Scene {
   constructor() {
@@ -17,21 +18,20 @@ export default class TrainingScene extends Phaser.Scene {
   create() {
     this.cameras.main.fadeIn(500, 0, 0, 0);
 
-    const { width } = this.scale;
+    const { width, height } = this.scale;
+    const TEXT_STYLES = getTextStyles(width);
 
     this.add
-      .text(width / 2, 60, TEXT_CONTENT.training.title, {
-        fontSize: "60px",
-        color: "#eb6339",
-        fontStyle: "bold",
-      })
+      .text(width / 2, 60, TEXT_CONTENT.training.title, TEXT_STYLES.title)
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, 110, TEXT_CONTENT.training.instruction, {
-        fontSize: "24px",
-        color: "#AAAAAA",
-      })
+      .text(
+        width / 2,
+        110,
+        TEXT_CONTENT.training.instruction,
+        TEXT_STYLES.instruction
+      )
       .setOrigin(0.5);
 
     this.statTexts = {};
@@ -51,7 +51,7 @@ export default class TrainingScene extends Phaser.Scene {
 
     this.options.forEach((option, index) => {
       const text = this.add
-        .text(width / 2, 350 + index * 60, option.label, {
+        .text(width / 2, 360 + index * 60, option.label, {
           fontSize: "36px",
         })
         .setOrigin(0.5)

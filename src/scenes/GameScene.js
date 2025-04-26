@@ -4,6 +4,7 @@ import { TEXT_CONTENT } from "../utils/textContent";
 import { settings } from "../utils/settings";
 import { gaussianRandom, estimateChanceOfSuccess } from "../utils/probability";
 import { transitionScene } from "../utils/sceneTransitions";
+import { getTextStyles } from "../utils/textStyles";
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -22,26 +23,18 @@ export default class GameScene extends Phaser.Scene {
   create() {
     this.cameras.main.fadeIn(500, 0, 0, 0);
 
-    const { width } = this.scale;
+    const { width, height } = this.scale;
+    const TEXT_STYLES = getTextStyles(width);
 
     const situationText = TEXT_CONTENT.game.situation;
     this.options = TEXT_CONTENT.game.options;
 
     this.add
-      .text(width / 2, 60, TEXT_CONTENT.game.title, {
-        fontSize: "60px",
-        color: "#eb6339",
-        fontStyle: "bold",
-      })
+      .text(width / 2, 60, TEXT_CONTENT.game.title, TEXT_STYLES.title)
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, 110, situationText, {
-        fontSize: "28px",
-        color: "#FFFFFF",
-        wordWrap: { width: width - 100 },
-        align: "center",
-      })
+      .text(width / 2, 119, situationText, TEXT_STYLES.instruction)
       .setOrigin(0.5);
 
     this.optionTexts = [];
@@ -52,8 +45,9 @@ export default class GameScene extends Phaser.Scene {
       const labelWithChance = `${option.label}: ${estimatedSuccess}% chance of success`;
 
       const text = this.add
-        .text(width / 2, 200 + index * 60, labelWithChance, {
+        .text(width / 2, height / 2 + index * 60, labelWithChance, {
           fontSize: "32px",
+          wordWrap: { width: width - 80 },
         })
         .setOrigin(0.5)
         .setInteractive({ useHandCursor: true })
