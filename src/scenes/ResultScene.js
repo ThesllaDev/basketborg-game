@@ -17,12 +17,12 @@ export default class ResultScene extends Phaser.Scene {
 
     const { width, height } = this.scale;
     const TEXT_STYLES = getTextStyles(width);
-    const { success, decision } = data;
+    const { success, points, total } = data;
 
     const titleTextContent = TEXT_CONTENT.result.title;
     const resultTextContent = success
-      ? TEXT_CONTENT.result.success(decision)
-      : TEXT_CONTENT.result.failure(decision);
+      ? TEXT_CONTENT.result.success(points, total)
+      : TEXT_CONTENT.result.failure(points, total);
     const buttonTextContent = TEXT_CONTENT.result.button;
 
     this.add
@@ -41,7 +41,7 @@ export default class ResultScene extends Phaser.Scene {
         padding: { x: 20, y: 10 },
       })
       .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true, ariaLabel: option })
+      .setInteractive({ useHandCursor: true, ariaLabel: buttonTextContent })
       .on("pointerover", () => {
         updateSelection([button], 0, {}, this);
         if (settings.voiceEnabled) speak(buttonTextContent);

@@ -22,8 +22,18 @@ export const TEXT_CONTENT = {
   },
   game: {
     title: "Game Situation",
-    situation:
-      "There are only a few seconds left in the game and you already have possession of the ball, make your choice:",
+    situations: [
+      "There's only a few seconds left — it's now or never!",
+      "Your teammate is calling for a pass.",
+      "The defense looks weak on the left side.",
+      "You're feeling the pressure, but you see an opening.",
+      "The shot clock is about to expire!",
+      "Crowd is getting louder — make your move!",
+      "You spot an opportunity to dribble past.",
+      "Coach yells: Trust your instincts!",
+      "You hesitate for a split second — what will you do?",
+      "You notice a mismatch you can exploit!",
+    ],
     options: [
       { key: "passing", label: "Setting up the play and passing the ball" },
       { key: "shooting", label: "Mid-range shot" },
@@ -32,10 +42,11 @@ export const TEXT_CONTENT = {
     ],
   },
   result: {
-    title: "Game Result",
-    success: (decision) => `Nice! Your decision "${decision}" worked.`,
-    failure: (decision) =>
-      `Oops! Your decision "${decision}" didn't go as calculated.`,
-    button: "Back to Menu",
+    title: "Final Score",
+    success: (points, total) =>
+      `Awesome! You nailed ${points} out of ${total} plays and took the win!`,
+    failure: (points, total) =>
+      `You made it through ${points} out of ${total} plays. Tough luck, but keep grinding and you'll get there!`,
+    button: "Return to Menu",
   },
 };

@@ -12,6 +12,9 @@ export default class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: "GameScene" });
     this.selectedIndex = 0;
+    this.currentDecision = 0;
+    this.totalDecisions = 10;
+    this.points = 0;
   }
 
   init(data) {
@@ -28,15 +31,21 @@ export default class GameScene extends Phaser.Scene {
     const { width, height } = this.scale;
     const TEXT_STYLES = getTextStyles(width);
 
-    const situationText = TEXT_CONTENT.game.situation;
     this.options = TEXT_CONTENT.game.options;
 
     this.add
       .text(width / 2, 60, TEXT_CONTENT.game.title, TEXT_STYLES.title)
       .setOrigin(0.5);
 
-    this.add
-      .text(width / 2, 119, situationText, TEXT_STYLES.instruction)
+    this.currentSituation = this.getRandomSituation();
+
+    this.situationText = this.add
+      .text(
+        width / 2,
+        119,
+        this.getSituationDisplayText(),
+        TEXT_STYLES.instruction
+      )
       .setOrigin(0.5);
 
     this.optionTexts = [];
@@ -52,7 +61,7 @@ export default class GameScene extends Phaser.Scene {
           wordWrap: { width: width - 80 },
         })
         .setOrigin(0.5)
-        .setInteractive({ useHandCursor: true, ariaLabel: option })
+        .setInteractive({ useHandCursor: true, ariaLabel: option.label })
         .on("pointerdown", () => {
           this.evaluateDecision(option.key, option.label);
         })
@@ -66,14 +75,7 @@ export default class GameScene extends Phaser.Scene {
     });
 
     if (settings.voiceEnabled) {
-      const fullSpeech = [
-        situationText,
-        ...this.options.map((opt) => {
-          const chance = estimateChanceOfSuccess(this.stats[opt.key]);
-          return `${opt.label}, ${chance}% chance of success`;
-        }),
-      ];
-      speakSequence(fullSpeech);
+      this.speakSituationAndOptions();
     }
 
     setupKeyboardNavigation(this, this.options, {
@@ -88,23 +90,63 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
+  getRandomSituation() {
+    const situations = TEXT_CONTENT.game.situations;
+    const randomIndex = Phaser.Math.Between(0, situations.length - 1);
+    return situations[randomIndex];
+  }
+
+  getSituationDisplayText() {
+    return `Play ${this.currentDecision + 1} of ${this.totalDecisions}: ${
+      this.currentSituation
+    }`;
+  }
+
+  speakSituationAndOptions() {
+    const fullSpeech = [
+      this.getSituationDisplayText(),
+      ...this.options.map((opt) => {
+        const chance = estimateChanceOfSuccess(this.stats[opt.key]);
+        return `${opt.label}, ${chance}% chance of success`;
+      }),
+    ];
+    speakSequence(fullSpeech);
+  }
+
   evaluateDecision(statKey, decisionLabel) {
     const statValue = this.stats[statKey];
     const roll = gaussianRandom(statValue, 15);
     const success = roll >= 50;
 
-    if (settings.voiceEnabled) {
-      speak(`You chose: ${decisionLabel}`, () => {
-        transitionScene(this, "ResultScene", {
-          success,
-          decision: decisionLabel,
+    if (success) {
+      this.points += 1;
+    }
+
+    this.currentDecision++;
+
+    if (this.currentDecision >= this.totalDecisions) {
+      const victory = this.points >= 5;
+      if (settings.voiceEnabled) {
+        speak(`You completed the plays.`, () => {
+          transitionScene(this, "ResultScene", {
+            success: victory,
+            points: this.points,
+            total: this.totalDecisions,
+          });
         });
-      });
+      } else {
+        transitionScene(this, "ResultScene", {
+          success: victory,
+          points: this.points,
+          total: this.totalDecisions,
+        });
+      }
     } else {
-      transitionScene(this, "ResultScene", {
-        success,
-        decision: decisionLabel,
-      });
+      this.currentSituation = this.getRandomSituation();
+      this.situationText.setText(this.getSituationDisplayText());
+      if (settings.voiceEnabled) {
+        this.speakSituationAndOptions();
+      }
     }
   }
 }
